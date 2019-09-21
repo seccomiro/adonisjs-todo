@@ -1,0 +1,10 @@
+@layout('layout.master')
+
+@section('content')
+  <h1>My Tasks</h1>
+  <ul>
+    @each(task in tasks)
+      <li>{{ task.title }}</li>
+    @endeach
+  </ul>
+@endsection
