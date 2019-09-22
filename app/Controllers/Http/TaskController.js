@@ -33,7 +33,10 @@ class TaskController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create({ request, response, view }) {}
+  async create({ request, response, view }) {
+    const task = new Task();
+    return view.render('tasks.create', { task });
+  }
 
   /**
    * Create/save a new task.
@@ -43,7 +46,11 @@ class TaskController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store({ request, response }) {}
+  async store({ request, response }) {
+    const taskData = request.only(['title', 'body']);
+    const task = await Task.create(taskData);
+    response.route('tasks.show', { id: task.id });
+  }
 
   /**
    * Display a single task.
@@ -54,7 +61,10 @@ class TaskController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params, request, response, view }) {}
+  async show({ params, request, response, view }) {
+    const task = await Task.find(params.id);
+    return view.render('tasks.show', { task });
+  }
 
   /**
    * Render a form to update an existing task.

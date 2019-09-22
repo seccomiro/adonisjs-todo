@@ -13,15 +13,16 @@
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory');
 const Database = use('Database');
+const Task = use('App/Models/Task');
 
 class TaskSeeder {
   async run() {
-    await Database.table('tasks').insert({
+    await Task.create({
       title: 'Wash the car',
       body: 'This sunday',
       done: true
     });
-    await Database.table('tasks').insert({
+    await Task.create({
       title: 'Clean the house',
       body: 'Really',
       done: false
