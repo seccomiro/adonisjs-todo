@@ -19,3 +19,4 @@ const Route = use('Route');
 Route.any('/', ({ response }) => response.redirect('/tasks'));
 
 Route.resource('tasks', 'TaskController');
+Route.get('/tasks/:id/done', 'TaskController.done').as('tasks.done');

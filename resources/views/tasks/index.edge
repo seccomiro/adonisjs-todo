@@ -5,11 +5,22 @@
     <h2>My Tasks</h2>
     <a href="{{ route('tasks.create') }}" class="btn btn-primary btn-lg mb-4">New Task</a>
     <div class="row justify-content-center">
-      <ul class="col-lg-6 list-group">
+      <div class="col-lg-6 card text-left">
+        <ul class="list-group list-group-flush">
           @each(task in tasks)
-            <li class="list-group-item"><a class="stretched-link" href="{{ route('tasks.show', { id: task.id }) }}">{{ task.title }}</a></li>
+            <li class="list-group-item" style="font-size: 150%">
+              <a class="text-dark" href="{{ route('tasks.done', { id: task.id }) }}"><i class="far fa{{ task.done ? '-check' : '' }}-square"></i></a>
+              <a class="text-{{ task.done ? 'danger' : 'dark' }}" href="{{ route('tasks.show', { id: task.id }) }}">
+              @if(task.done)
+                <del>{{ task.title }}</del>
+              @else
+                {{ task.title }}
+              @endif
+              </a>
+            </li>
           @endeach
         </ul>
+      </div>
     </div>
 </div>
 @endsection

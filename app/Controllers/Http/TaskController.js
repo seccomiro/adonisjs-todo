@@ -20,7 +20,10 @@ class TaskController {
    * @param {View} ctx.view
    */
   async index({ request, response, view }) {
-    const tasks = (await Task.all()).rows;
+    const tasks = (await Task.query()
+      .orderBy('done')
+      .orderBy('updated_at', 'desc')
+      .fetch()).rows;
     return view.render('tasks.index', { tasks });
   }
 
@@ -107,6 +110,21 @@ class TaskController {
   async destroy({ params, request, response }) {
     let task = await Task.find(params.id);
     const success = await task.delete();
+    response.route('tasks.index');
+  }
+
+  /**
+   * Masrk a task as done or not.
+   * GET tasks/:id/done
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async done({ params, request, response }) {
+    let task = await Task.find(params.id);
+    task.done = !task.done;
+    const success = await task.save();
     response.route('tasks.index');
   }
 }
