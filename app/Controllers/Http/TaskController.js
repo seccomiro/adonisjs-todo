@@ -75,7 +75,10 @@ class TaskController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit({ params, request, response, view }) {}
+  async edit({ params, request, response, view }) {
+    const task = await Task.find(params.id);
+    return view.render('tasks.edit', { task });
+  }
 
   /**
    * Update task details.
@@ -85,7 +88,13 @@ class TaskController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {}
+  async update({ params, request, response }) {
+    let task = await Task.find(params.id);
+    const taskData = request.only(['title', 'body']);
+    task.merge(taskData);
+    const success = await task.save();
+    response.route('tasks.show', { id: params.id });
+  }
 
   /**
    * Delete a task with id.
