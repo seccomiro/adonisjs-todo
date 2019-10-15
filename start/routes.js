@@ -23,4 +23,7 @@ Route.any('/', ({ response }) => response.redirect('/tasks'));
 Route.resource('tasks', 'TaskController').middleware('auth');
 Route.get('/tasks/:id/done', 'TaskController.done')
   .as('tasks.done')
-  .middleware('auth');
+  .middleware('auth')
+  .middleware(
+    new Map([[['show', 'edit', 'update', 'destroy', 'done'], ['task']]])
+  );
