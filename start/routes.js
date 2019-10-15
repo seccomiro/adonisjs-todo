@@ -1,6 +1,5 @@
 'use strict';
 
-
 require('./authRoutes.js');
 
 /*
@@ -21,5 +20,7 @@ const Route = use('Route');
 
 Route.any('/', ({ response }) => response.redirect('/tasks'));
 
-Route.resource('tasks', 'TaskController');
-Route.get('/tasks/:id/done', 'TaskController.done').as('tasks.done');
+Route.resource('tasks', 'TaskController').middleware('auth');
+Route.get('/tasks/:id/done', 'TaskController.done')
+  .as('tasks.done')
+  .middleware('auth');
