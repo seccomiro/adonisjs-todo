@@ -20,8 +20,11 @@ class TaskController {
    * @param {View} ctx.view
    */
   async index({ request, response, view, auth }) {
+    const term = request.input('search');
+
     const tasks = (await auth.user
       .tasks()
+      .where('title', 'like', `%${term}%`)
       .orderBy('done')
       .orderBy('updated_at', 'desc')
       .fetch()).rows;
