@@ -1,13 +1,13 @@
 'use strict';
 
 class EnsureUserTask {
-  async handle({ request, params, auth }, next) {
-    console.log('EnsureUserTask EnsureUserTask EnsureUserTask EnsureUserTask');
-    // const task = await auth.user
-    //   .tasks()
-    //   .where('id', params.id)
-    //   .first();
-    // request.task = task;
+  async handle(ctx, next) {
+    const { params, auth } = ctx;
+    const task = await auth.user
+      .tasks()
+      .where('id', params.id)
+      .first();
+    ctx.task = task;
 
     await next();
   }

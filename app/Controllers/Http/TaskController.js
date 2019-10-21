@@ -20,7 +20,7 @@ class TaskController {
    * @param {View} ctx.view
    */
   async index({ request, response, view, auth }) {
-    const term = request.input('search');
+    const term = request.input('search') || '';
 
     const tasks = (await auth.user
       .tasks()
@@ -70,11 +70,7 @@ class TaskController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params, request, response, view, auth }) {
-    const task = await auth.user
-      .tasks()
-      .where('id', params.id)
-      .first();
+  async show({ view, task }) {
     return view.render('tasks.show', { task });
   }
 
@@ -87,12 +83,7 @@ class TaskController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit({ params, request, response, view }) {
-    const task = await auth.user
-      .tasks()
-      .where('id', params.id)
-      .first();
-    // const task = await Task.find(params.id);
+  async edit({ view, task }) {
     return view.render('tasks.edit', { task });
   }
 
@@ -104,16 +95,11 @@ class TaskController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {
-    const task = await auth.user
-      .tasks()
-      .where('id', params.id)
-      .first();
-    // let task = await Task.find(params.id);
+  async update({ request, response, task }) {
     const taskData = request.only(['title', 'body']);
     task.merge(taskData);
     const success = await task.save();
-    response.route('tasks.show', { id: params.id });
+    response.route('tasks.show', { id: task.id });
   }
 
   /**
@@ -124,32 +110,22 @@ class TaskController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy({ params, request, response }) {
-    const task = await auth.user
-      .tasks()
-      .where('id', params.id)
-      .first();
-    // let task = await Task.find(params.id);
-    const success = await task.delete();
+  async destroy({ response, task }) {
+    await task.delete();
     response.route('tasks.index');
   }
 
   /**
-   * Masrk a task as done or not.
+   * Mark a task as done or not.
    * GET tasks/:id/done
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async done({ params, request, response }) {
-    const task = await auth.user
-      .tasks()
-      .where('id', params.id)
-      .first();
-    // let task = await Task.find(params.id);
+  async done({ params, request, response, task }) {
     task.done = !task.done;
-    const success = await task.save();
+    await task.save();
     response.route('tasks.index');
   }
 }

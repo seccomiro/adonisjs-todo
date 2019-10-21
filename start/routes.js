@@ -20,10 +20,11 @@ const Route = use('Route');
 
 Route.any('/', ({ response }) => response.redirect('/tasks'));
 
-Route.resource('tasks', 'TaskController').middleware('auth');
-Route.get('/tasks/:id/done', 'TaskController.done')
-  .as('tasks.done')
+Route.resource('tasks', 'TaskController')
   .middleware('auth')
   .middleware(
     new Map([[['show', 'edit', 'update', 'destroy', 'done'], ['task']]])
   );
+Route.get('/tasks/:id/done', 'TaskController.done')
+  .as('tasks.done')
+  .middleware(['auth', 'task']);
